@@ -17,7 +17,7 @@
 * *DRAM*: *Spatial*的DRAM。用于*Host*到*Accel*的双向数据交换。
 
 ## 应用样例
-本文使用 *Lab1Part1RegExample* 做为例子。该应用详见[图1](./regexample.png).
+本文使用 *Lab1Part1RegExample* 做为例子。该应用详见![图1](./regexample.png).
 行11～17使用了两个*ArgIn*寄存器。*Host*写入了两个标量。
 行19～23运行了加速器并且将结果写入到*ArgOut*里。
 行25将结果返回到*Host*端。
@@ -50,7 +50,7 @@ sed -i 's/SRFF/SRFF_sp/g' Top.v
 ```bash
 cp Top.v $IP_SRC_HOME/ip_src/
 ```
-当把该IP导入Platform Designer时，Platfrom Designer会要求用户提供Avalon Slave和AXI4 Master的基底位址。这些基底位址将被$Host$端映射到虚拟内存上。我们假设Avalon Slave的基底位址位于*FRINGE_SCALAR_BASEADDR*；AXI4 Master的基底位址位于*FRINGE_MEM_BASEADDRA*。
+当把该IP导入Platform Designer时，Platfrom Designer会要求用户提供Avalon Slave和AXI4 Master的基底位址。这些基底位址将被$Host$端映射到虚拟内存上。我们假设Avalon Slave的基底位址位于*FRINGE_SCALAR_BASEADDR*；AXI4 Master的基底位址位于*FRINGE_MEM_BASEADDR*。
 
 ## 在CPU端支持*Spatial Host*
 本章节描述了*Host*端的实现方式。我们提供的例子里使用了ARM的g++编译器。如果用户的编译器是非ARM的，可以在以下文件里更改：
@@ -65,7 +65,7 @@ cd $SPATIAL_HOME/gen/Lab1Part1RegExample/cpp/
 ```
 运行*Host*的逻辑由*Spatial*自动生成。该文件位于*TopHost.cpp*。该文件首先通过*load*函数将*bitstream*加载到加速卡端。然后，*TopHost*用*setArg*函数加载标量到*ArgIn*寄存器里。如果用户的设计里有*DRAM*，*TopHost*也会自动用*setArg*函数设置*DRAM*的基地位置。*TopHost*会使用*memcpy*函数来实现*Host*,*Accel*端的双向张量传递。当这些设置完成后，*TopHost*会用*run*函数来启动*Accel*。当*Accel*运行结束后，*TopHost*会用*getArg*来将结果传递回*Host*。如果设计里有*DRAM*，*TopHost*也会使用*DRAM*将结果传递回*Host*。
 
-在这个流程里，*load, readReg, writeReg, memcpy* 函数被用于构建其他函数。用户需要实现这四个函数。全部的API定义可以在以下[文件](./fringecontext.png)里找到：
+在这个流程里，*load, readReg, writeReg, memcpy* 函数被用于构建其他函数。用户需要实现这四个函数。全部的API定义可以在以下![文件](./fringecontext.png)里找到：
 ```bash
 $SPATIAL_HOME/gen/Lab1Part1RegExample/cpp/fringeArrai10/FringeContextBase.h
 ```
@@ -111,4 +111,4 @@ $SPATIAL_HOME/spatial/core/resources/chiselgen/app-level/Makefile
 * 释放共享的记忆区。用户需要实现*free*函数。
 * 释放AFU权限。可以在 *FringeContextArria10*的析构函数里实现。
 ### *Accel*
-用户可以在Platform Designer内导入*Accel*的IP。见[如图](./accel.png)样例。*Accel*被导入后重命名为*Top_1*。用户可以将*io_M_AXI_0*链接到EMIF的Avalon-MM接口上。Platform Designer会自动完成接口协议转换。用户需要将*io_S_AVALON_0*链接到CCI-P数据总线上。Platform Designer也会自动实现接口协议转换。
+用户可以在Platform Designer内导入*Accel*的IP。见![如图](./accel.png)样例。*Accel*被导入后重命名为*Top_1*。用户可以将*io_M_AXI_0*链接到EMIF的Avalon-MM接口上。Platform Designer会自动完成接口协议转换。用户需要将*io_S_AVALON_0*链接到CCI-P数据总线上。Platform Designer也会自动实现接口协议转换。
